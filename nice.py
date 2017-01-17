@@ -16,12 +16,19 @@ AWESOMENESS = [
 def start_here():
     """Home page."""
 
-    return "<!doctype html><html>Hi! This is the home page.<html>"
+    return """<!doctype html><html>
+    Hi! This is the home page.<br>
+    <a href="/hello">Hello page</a>
+    <html>"""
 
 
 @app.route('/hello')
 def say_hello():
     """Say hello and prompt for user's name."""
+
+    compliment_text = ""
+    for i in range(len(AWESOMENESS)):
+      compliment_text += """<label>{1}<input type="radio" name="{0}" value="{1}"></label>""".format("compliment", AWESOMENESS[i]) 
 
     return """
     <!doctype html>
@@ -33,7 +40,8 @@ def say_hello():
         <h1>Hi There!</h1>
         <form action="/greet">
           <label>What's your name? <input type="text" name="person"></label>
-          <input type="submit">
+          <input type="submit">""" + compliment_text + """
+          </input>
         </form>
       </body>
     </html>
@@ -46,7 +54,8 @@ def greet_person():
 
     player = request.args.get("person")
 
-    compliment = choice(AWESOMENESS)
+    # compliment = choice(AWESOMENESS)
+    compliment = request.args.get("compliment")
 
     return """
     <!doctype html>
@@ -64,4 +73,4 @@ def greet_person():
 if __name__ == '__main__':
     # debug=True gives us error messages in the browser and also "reloads"
     # our web app if we change the code.
-    app.run(debug=True)
+    app.run(debug=False)
