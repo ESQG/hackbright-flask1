@@ -11,6 +11,9 @@ AWESOMENESS = [
     'awesome', 'terrific', 'fantastic', 'neato', 'fantabulous', 'wowza', 'oh-so-not-meh',
     'brilliant', 'ducky', 'coolio', 'incredible', 'wonderful', 'smashing', 'lovely']
 
+INSULTS = [
+    'a jerk', 'annoying', 'generally terrible', 'an asshole', 'inadequate', 'illogical']
+
 
 @app.route('/')
 def start_here():
@@ -28,7 +31,7 @@ def say_hello():
 
     compliment_text = ""
     for i in range(len(AWESOMENESS)):
-      compliment_text += """<label>{1}<input type="radio" name="{0}" value="{1}"></label>""".format("compliment", AWESOMENESS[i]) 
+      compliment_text += """<label>{1}<input type="radio" name="{0}" value="{1}"></label>""".format("compliment", AWESOMENESS[i])
 
     return """
     <!doctype html>
@@ -37,10 +40,19 @@ def say_hello():
         <title>Hi There!</title>
       </head>
       <body>
-        <h1>Hi There!</h1>
+        <h1>Hi There!</h1>You now have all the example code you need to make your own route that will dish out insults instead. Make another route called /diss that dishes out one of several insults. Set up a separate form in the HTML returned from /hello that goes to /diss.
+
+
         <form action="/greet">
           <label>What's your name? <input type="text" name="person"></label>
           <input type="submit">""" + compliment_text + """
+          </input>
+        </form>
+        Don't want a compliment?! Fill out this form instead:
+
+        <form action="/diss">
+          <label>What's your name? <input type="text" name="person"></label>
+          <input type="submit">
           </input>
         </form>
       </body>
@@ -69,8 +81,25 @@ def greet_person():
     </html>
     """ % (player, compliment)
 
+@app.route('/diss')
+def disssss():
+    insult = choice(INSULTS)
+    player = request.args.get('person')
+    return """
+    <!doctype html>
+    <html>
+      <head>
+        <title>A Diss</title>
+      </head>
+      <body>
+        Hi %s!  No offense, but I think you're %s.
+      </body>
+    </html>
+    """ %(player, insult)
+
+
 
 if __name__ == '__main__':
     # debug=True gives us error messages in the browser and also "reloads"
     # our web app if we change the code.
-    app.run(debug=False)
+    app.run(debug=True)
